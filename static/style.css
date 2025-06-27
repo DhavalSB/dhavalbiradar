@@ -200,6 +200,7 @@ footer p, footer a {
 
 .main-directory {
   margin: 2rem;
+  margin-left: 1rem;
   display: block;
   justify-content: left;
   align-items: baseline;
