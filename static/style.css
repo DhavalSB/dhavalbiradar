@@ -208,7 +208,7 @@ footer p, footer a {
 
 .main-directory h1 {
   color: var(--text-color);
-  font-size: 170%;
+  font-size: 160%;
   font-weight: 400;
   margin-bottom: 0;
   margin-right: 0.2rem;
@@ -216,6 +216,7 @@ footer p, footer a {
 
 .main-directory p {
   margin-top: -0.5em;
+  font-size: 95%;
 }
 
 .main-directory-link {
@@ -224,15 +225,16 @@ footer p, footer a {
   justify-content: center;
   margin: 1rem 0;
 }
+
+.link-slide span {
+  transition: transform 0.3s ease;
+  color: var(--link-color);
+}
+
 @media (hover: hover) and (pointer: fine) {
 
   .main-directory:hover a,
   .main-directory:hover h1 {
-    color: var(--link-color);
-  }
-
-  .link-slide span {
-    transition: transform 0.3s ease;
     color: var(--link-color);
   }
 
