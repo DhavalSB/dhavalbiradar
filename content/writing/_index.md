@@ -1,5 +1,5 @@
 +++
-title = "Writing"
+title = "writing"
 description = ""
 template = "writing.html"
 +++

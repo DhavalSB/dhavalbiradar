@@ -1,5 +1,5 @@
 +++
-title = "About"
+title = "about"
 template = "about.html"
 +++
 
@@ -8,6 +8,4 @@ in pursuing math or computer science in the future.
 
 This summer I'm pushing myself to do some projects to deepen my interests. This
 site shall be the hub for my yap about everything I'm up to.
-
-Contact Me:
 
