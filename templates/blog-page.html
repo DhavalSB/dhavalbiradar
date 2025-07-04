@@ -24,8 +24,15 @@
 {% endblock extra_head %}
 
 {% block content %}
-  <h2 class="title">{{ page.description }} {{ page.title }} </h2>
+<div class="post-header">
+  <h1> {{ page.title }} </h1>
+  <div>
+    <h2> {{ page.description }} </h2>
+    <!--h2>{{ page.date }}</h2-->
+  </div>
+</div>
+<div class="blog-post">
   {{ page.content | safe }}
-  <h4 class="subtitle handwritten">{{ page.date }}</h4>
+</div>
 {% endblock content %}
 

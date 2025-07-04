@@ -24,10 +24,23 @@
         <h1 id="header-name">db</h1>
       </a>
 
-      {% if section.title %}
-      <h1 id="header-directory">/</h1>
-      <h1 id="header-directory">{{section.title}}</h1>
+      {% if page %}
+        {% set path_parts = page.components %}
+        {% if path_parts | length > 0 %}
+          {% set top_section = path_parts[0] %}
+          <div class="directory-link">
+            <h1 id="header-directory">/</h1>
+            <a href="/writing">
+              {{ top_section }}
+            </a>
+          </div>
+        {% endif %}
       {% endif %}
+      {% if section.title %}
+        <h1 id="header-directory">/</h1>
+        <h1 id="header-directory">{{section.title}}</h1>
+      {% endif %}
+
     </div>
 
     <a href="/about" style="">about</a>
@@ -40,8 +53,8 @@
   <footer>
     <hr class="section-divider" style="margin-bottom: 2rem;">
     <p> dhaval biradar </p>
-    <a href="https://www.github.com/dhavalsb"> github </a> •
-    <a href="https://www.linkedin.com/in/dhaval-b-486b1723a/"> linkedin </a> •
+    <a href="https://www.github.com/dhavalsb"> github </a> ·
+    <a href="https://www.linkedin.com/in/dhaval-b-486b1723a/"> linkedin </a> ·
     <a href="mailto:pythondsb@gmail.com"> email </a>
     <div class="colophon">
       <a href="/colophon" id="colophon-button">
