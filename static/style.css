@@ -78,10 +78,6 @@ header a {
   gap: 10px;
 }
 
-header a:hover {
-  color: var(--link-color);
-}
-
 footer {
   display: block;
   color: var(--link-color);
@@ -101,11 +97,7 @@ footer p, footer a {
   font-size: 125%;
 }
 
-#header-name:hover {
-  color: var(--logo-hover-color);
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 100ms;
-}
+
 
 #header-directory {
   color: var(--text-color);
@@ -132,9 +124,7 @@ footer p, footer a {
   font-size: 125%;
 }
 
-.directory-link a:hover {
-  color: var(--link-color);
-}
+
 
 .section-header {
   font-weight: 400;
@@ -249,7 +239,23 @@ footer p, footer a {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  a:hover {
+    color: var(--link-hover-color);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 100ms;
+  }
+  header a:hover {
+    color: var(--link-color);
+  }
 
+  #header-name:hover {
+    color: var(--logo-hover-color);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 100ms;
+  }
+  .directory-link a:hover {
+    color: var(--link-color);
+  }
   .main-directory:hover a,
   .main-directory:hover h1 {
     color: var(--link-color);
@@ -259,6 +265,11 @@ footer p, footer a {
     transform: translateX(2px);
     color: var(--link-hover-color);
   }
+
+  .photo-gallery img:hover {
+    filter: blur(1px) brightness(0.8);
+  }
+
 
 }
 
@@ -319,6 +330,28 @@ footer p, footer a {
   color: var(--link-color);
 }
 
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+/* lightbox for each image */
+
+.photo-gallery img {
+  object-fit: cover;
+  border-radius: 1rem;
+  width: 100%;
+  aspect-ratio: 3 / 2; 
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  transition: filter 0.3s ease;
+  position: relative;
+}
+
+
+
 .colophon {
   display: flex;
   align-items: center;
@@ -373,11 +406,7 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  color: var(--link-hover-color);
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 100ms;
-}
+
 
 .title {
   text-decoration: none;

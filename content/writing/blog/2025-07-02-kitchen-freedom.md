@@ -5,7 +5,8 @@ description = "July 2, 2025 · Home Cooking "
 +++
 
 
-As the semester came to an end this year, I knew I wanted to cook more. The previous months had been busy and the summer would finally offer an outlet to all my vaulted projects. Then came an idea:
+As the semester came to an end this year, I knew I wanted to cook more. The previous months had been busy and the summer would finally offer an outlet to all my vaulted projects.
+Then came an idea:
 	
 > "How can I use this time to *actually* improve my cooking skills"
 
