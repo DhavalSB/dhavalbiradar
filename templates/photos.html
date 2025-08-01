@@ -2,19 +2,42 @@
 
 {% block content %}
 
-<h1> nature </h1>
-<hr class="section-divider" style="margin: 1rem 0;">
-<div class="photo-gallery">
-  <img src="/images/gallery/ventura.jpg">
-  <a href="/photos/latte-art">
-    <img src="/images/gallery/valley.png">
-  </a>
-  <img src="/images/gallery/shore.jpeg">
-  <img src="/images/gallery/bridge.jpg">
-  <img src="/images/gallery/monterey.jpg">
-  <img src="/images/gallery/sunset.jpg">
-  <img src="/images/gallery/squirtle.jpeg">
-
+<div id="lightbox" class="lightbox hidden">
+  <img id="lightbox-img" src="" alt="Full Image">
 </div>
+
+<section class="gallery-section">
+  <h1> aerial </h1>
+  <hr class="section-divider">
+  <div class="photo-gallery">
+    <img src="/images/gallery/thumbnails/shore.jpeg" data-fullsrc="/images/gallery/fullsrc/shore.jpeg">
+    <a href="/photos/monterey-showcase">
+      <img src="/images/gallery/thumbnails/monterey.jpg" data-fullsrc="/images/gallery/fullsrc/monterey.jpg">
+    </a>
+    <img src="/images/gallery/thumbnails/bridge.jpg" data-fullsrc="/images/gallery/fullsrc/bridge.jpg">
+      <img src="/images/gallery/thumbnails/frost.jpeg" data-fullsrc="/images/gallery/fullsrc/frost.jpeg">
+    <img src="/images/gallery/thumbnails/sunset.jpg" data-fullsrc="/images/gallery/fullsrc/sunset.jpg">
+    <img src="/images/gallery/thumbnails/squirtle.jpeg" data-fullsrc="/images/gallery/fullsrc/squirtle.jpeg">
+  </div>
+</section>
+
+<section class="gallery-section">
+  <h1> food </h1>
+  <hr class="section-divider">
+  <div class="photo-gallery">
+    <img src="/images/gallery/thumbnails/soba.jpg" data-fullsrc="/images/gallery/fullsrc/soba.jpg">
+    <img src="/images/gallery/thumbnails/latte2.jpeg" data-fullsrc="/images/gallery/fullsrc/latte2.jpeg">
+  </div>
+
+</section>
+
+<section class="gallery-section">
+  <h1> places </h1>
+  <hr class="section-divider">
+  <div class="photo-gallery">
+    <img src="/images/gallery/ventura.jpg" data-fullsrc="/images/gallery/fullsrc/ventura.jpg">
+  </div>
+</section>
+
 
 {% endblock %}
