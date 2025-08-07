@@ -1,13 +1,82 @@
-{% extends "base.html" %}
+{% extends "showcase.html" %}
 
 {% block content %}
-  <div>{{ page.content | safe}}</div>
 
-  <div class="showcase">
-    <img src="/images/gallery/showcase/monterey/1.jpg">
-    <img src="/images/gallery/showcase/monterey/2.jpeg">
-    <img src="/images/gallery/showcase/monterey/3.jpeg">
-    <img src="/images/gallery/showcase/monterey/4.jpeg">
+  <div id="lightbox" class="lightbox hidden">
+    <div class="lightbox-container">
+      <button class="lightbox-close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <img id="lightbox-img" src="" alt="Full Image">
+    </div>
   </div>
-  
-{% endblock %}
+
+  <main class="showcase-main">
+    <section class="showcase-hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Monterey</h1>
+        <p class="hero-subtitle">
+          A miraculously clear day in Monterey as I flew to KMRY for my second flight as a private pilot. Fun Class C airport, but sloping terrain and sporradic weather.
+        </p>
+        <div class="hero-meta">
+          <span class="meta-item">Location — Monterey, CA</span>
+          <span class="meta-item">Date — 2/22/2025</span>
+          <span class="meta-item">Aircraft — Cessna 172M</span>
+        </div>
+
+        <hr class="section-divider">
+      </div>
+
+    </section>
+
+
+    <section class="showcase-block">
+      <div class="section-content">
+        <h2 class="showcase-section-header">coast</h2>
+        {# optional: add a paragraph here later #}
+      </div>
+      <section class="showcase-gallery">
+      <div class="gallery-item large">
+        <img src="/images/gallery/showcase/monterey/1.jpg" alt="Monterey Coastline" data-fullsrc="/images/gallery/showcase/monterey/1.jpg">
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery/showcase/monterey/2.jpeg" alt="Monterey Bay" data-fullsrc="/images/gallery/showcase/monterey/2.jpeg">
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery/showcase/monterey/3.jpeg" alt="Monterey Harbor" data-fullsrc="/images/gallery/showcase/monterey/3.jpeg">
+      </div>
+      <div class="gallery-item large">
+        <img src="/images/gallery/showcase/monterey/4.jpeg" alt="Monterey Sunset" data-fullsrc="/images/gallery/showcase/monterey/4.jpeg">
+      </div>
+      </section>
+    </section>
+
+    <section class="showcase-block">
+      <div class="section-content">
+        <h3 class="showcase-section-header">filler</h3>
+        {# optional: add a paragraph here later #}
+      </div>
+      <section class="showcase-gallery">
+      <div class="gallery-item large">
+        <img src="/images/gallery/fullsrc/shore.jpeg" alt="Shoreline" data-fullsrc="/images/gallery/fullsrc/shore.jpeg">
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery/fullsrc/bridge.jpg" alt="Bridge" data-fullsrc="/images/gallery/fullsrc/bridge.jpg">
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery/fullsrc/frost.jpeg" alt="Frost" data-fullsrc="/images/gallery/fullsrc/frost.jpeg">
+      </div>
+      <div class="gallery-item large">
+        <img src="/images/gallery/fullsrc/sunset.jpg" alt="Sunset" data-fullsrc="/images/gallery/fullsrc/sunset.jpg">
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery/fullsrc/squirtle.jpeg" alt="Squirtle" data-fullsrc="/images/gallery/fullsrc/squirtle.jpeg">
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery/fullsrc/ventura.jpg" alt="Ventura" data-fullsrc="/images/gallery/fullsrc/ventura.jpg">
+      </div>
+      </section>
+    </section>
+  </main>
+
+{% endblock content %}

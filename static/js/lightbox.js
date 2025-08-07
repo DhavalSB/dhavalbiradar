@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const galleryImages = document.querySelectorAll(".photo-gallery img");
+  const galleryImages = document.querySelectorAll(".photo-gallery img, .showcase-gallery img");
 
   galleryImages.forEach((img) => {
     img.addEventListener("click", (e) => {
@@ -16,7 +16,18 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   const lightbox = document.getElementById("lightbox");
-  lightbox.addEventListener("click", () => {
+  const closeButton = document.querySelector(".lightbox-close");
+  
+  // Close on background click
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+      lightbox.classList.add("hidden");
+      document.getElementById("lightbox-img").src = "";
+    }
+  });
+  
+  // Close on button click
+  closeButton.addEventListener("click", () => {
     lightbox.classList.add("hidden");
     document.getElementById("lightbox-img").src = "";
   });
