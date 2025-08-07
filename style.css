@@ -1,0 +1,977 @@
+@import url('/flexoki.css');
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://example.com/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+    url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+    url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+:root {
+  --background-color: var(--flexoki-paper);
+  --text-color: var(--flexoki-black);
+  --link-color: var(--flexoki-orange-400);
+  --link-hover-color: var(--flexoki-orange-600);
+  --blockquote-color: var(--flexoki-600);
+  --code-background: #f2f2f2;
+  --code-text-color: #222;
+}
+
+html.dark {
+  --background-color: var(--flexoki-black);
+  --text-color: var(--flexoki-200);
+  --logo-color: var(--flexoki-orange-300);
+  --logo-hover-color: var(--flexoki-600);
+  --link-color: var(--flexoki-500);
+  --link-hover-color: var(--flexoki-700);
+  --blockquote-color: var(--flexoki-500);
+  --code-background: #333;
+  --code-text-color: #f2f2f2;
+}
+
+body, body * {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: auto;
+  padding: 20px;
+  max-width: 720px;
+  text-align: left;
+  background-color: var(--background-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+  color: var(--text-color);
+  font-size: 100%;
+}
+/* Showcase pages: opt out of base body constraints */
+body.showcase-body {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  width: 100%;
+}
+/* Inset the back arrow header and footer without constraining main content */
+.showcase-body header,
+.showcase-body footer {
+  padding-inline: clamp(16px, 4vw, 48px);
+}
+
+/* Showcase header with inline back button */
+.showcase-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-block: clamp(8px, 2vh, 20px);
+  margin-block-start: clamp(6px, 2vh, 20px);
+}
+
+/* Use site logo color for arrow icon */
+.showcase-header .back-button .material-symbols-outlined {
+  color: var(--logo-color);
+  font-size: 28px;
+}
+
+/* Remove frosted glass from showcase header back button */
+.showcase-header .back-button {
+  background: transparent;
+  backdrop-filter: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0.4rem; /* keep tap target without visual chrome */
+}
+.showcase-header .back-button:hover {
+  background: transparent;
+  transform: none;
+}
+
+header {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  font-weight: 250;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header a {
+  color: var(--text-color);
+  font-size: 105%;
+  font-weight: 250;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+footer {
+  display: block;
+  color: var(--link-color);
+}
+
+footer p, footer a {
+  color: var(--link-color);
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+
+
+#header-name {
+  color: var(--logo-color);
+  font-weight: 300;
+  font-size: 125%;
+}
+
+
+
+#header-directory {
+  color: var(--text-color);
+  font-weight: 300;
+  font-size: 125%;
+}
+
+.directory {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.3rem;
+}
+
+.directory-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.3rem;
+}
+
+.directory-link a {
+  font-weight: 300;
+  font-size: 125%;
+}
+
+
+
+.section-header {
+  font-weight: 400;
+  font-size: 150%;
+}
+
+/* Showcase-specific section header spacing */
+.showcase-main .section-header {
+  margin: 0.5rem 0 0.25rem;
+}
+
+/* Space relationship between section header and its gallery */
+.showcase-main .section-header + .showcase-gallery {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+}
+
+/* Structured showcase sections (title + optional text) */
+.showcase-section {
+  padding: 0 1.5rem; /* slight inset so it doesn't glue to left edge */
+  margin: 1rem 0 0.5rem;
+}
+.showcase-section .section-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.showcase-section-header {
+  font-weight: 350;
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  line-height: 1.1;
+  margin: 0; /* container handles spacing */
+  text-align: center;
+}
+.section-title {
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  line-height: 1.15;
+  margin: 0; /* handled by container */
+}
+
+/* Reduce gap between a section and its following gallery */
+.showcase-section + .showcase-gallery {
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Unified showcase blocks: header + optional copy + gallery */
+.showcase-block {
+  padding: 0 1.5rem; /* align with galleries and avoid left glue */
+  margin: 3rem 0; /* vertical rhythm between sections */
+}
+.showcase-block .section-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.showcase-block .showcase-section-header {
+  text-align: center;
+}
+.showcase-block .showcase-gallery {
+  padding-top: 1.75rem; /* give headers more breathing room from images */
+  margin-top: 0.75rem;
+}
+
+/* Tighter handoff from hero to first block */
+.section-divider + .showcase-block {
+  margin-top: 1rem; /* reduce space right after hero */
+}
+
+/* Reduce space after hero's divider specifically on showcase pages */
+.showcase-hero .section-divider {
+  margin: 1.5rem 0;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid #222;
+  margin: 4rem 0;
+  opacity: 1;
+}
+
+.header-image {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-image img {
+  width: 80%;
+  height: auto;
+  display: block;
+  border-radius: 1rem;
+}
+
+.section-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 150%;
+  font-weight: 200;
+  margin: 1rem;
+  color: var(--link-color);
+  gap: 0.7rem;
+}
+.section-ellipsis * {
+  margin: 0;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+.material-symbols-outlined {
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+
+.main-directory {
+  margin: 2rem;
+  margin-left: 1rem;
+  display: block;
+  justify-content: left;
+  align-items: baseline;
+  color: var(--link-color);
+}
+
+.main-directory h1 {
+  color: var(--text-color);
+  font-size: 160%;
+  font-weight: 400;
+  margin-bottom: 0;
+  margin-right: 0.2rem;
+}
+
+.main-directory p {
+  margin-top: -0.5em;
+  font-size: 95%;
+}
+
+.main-directory-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  margin: 1rem 0;
+}
+
+.link-slide span {
+  transition: transform 0.3s ease;
+  color: var(--link-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    color: var(--link-hover-color);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 100ms;
+  }
+  header a:hover {
+    color: var(--link-color);
+  }
+
+  #header-name:hover {
+    color: var(--logo-hover-color);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 100ms;
+  }
+  .directory-link a:hover {
+    color: var(--link-color);
+  }
+  .main-directory:hover a,
+  .main-directory:hover h1 {
+    color: var(--link-color);
+  }
+
+  .link-slide:hover span {
+    transform: translateX(2px);
+    color: var(--link-hover-color);
+  }
+/*
+  .photo-gallery img:hover {
+  filter: brightness(0.9);
+  }
+*/
+}
+
+
+.gallery-section {
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+
+.gallery-section h1 {
+  margin: 0.5rem 0;
+  font-weight: 400;
+}
+
+.gallery-section hr {
+  margin: 0;
+}
+
+.writing-sections {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1.5rem;
+}
+
+.writing-sections li {
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.writing-sections a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.general-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.featured {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-size: 90%;
+}
+
+.featured a {
+  color: var(--text-color);
+  padding-top: 0em;
+}
+
+.featured h2 {
+  font-weight: 300;
+  font-size: 120%;
+  color: var(--link-color);
+  padding-top: -1em;
+  padding-bottom: -1em;
+}
+
+.featured h3 {
+  margin-bottom: 0;
+  font-size: 135%;
+  font-weight: 350;
+}
+
+.featured p {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  font-weight: 300;
+  font-size: 105%;
+  color: var(--link-color);
+}
+
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* lightbox for each image */
+
+.photo-gallery img {
+  object-fit: cover;
+  border-radius: 1rem;
+  width: 100%;
+  aspect-ratio: 3 / 2; 
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  position: relative;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+/* Hover effects for clickable images */
+.photo-gallery img:hover {
+  transform: scale(1.02);
+}
+
+/* Special styling for showcase-linked images */
+.photo-gallery a {
+  position: relative;
+  display: block;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+.photo-gallery a:hover {
+  transform: scale(1.02);
+}
+
+#lightbox {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.lightbox-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 1rem;
+  box-shadow: 0 0 2rem rgba(0, 0, 0, 0.5);
+  padding: auto;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lightbox-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-close .material-symbols-outlined {
+  font-size: 24px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+/* Showcase indicator for images with gallery pages */
+.showcase-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 1rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 2;
+}
+
+/* Smaller on desktop */
+@media (min-width: 1024px) {
+  .showcase-indicator {
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 8px;
+    border-radius: 1rem;
+  }
+  
+  .showcase-indicator .material-symbols-outlined {
+    font-size: 14px;
+  }
+}
+
+.showcase-indicator .material-symbols-outlined {
+  font-size: 18px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+
+/* Dramatic showcase page styling */
+.showcase-page {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  text-align: left;
+}
+
+.showcase-nav {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 1000;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 400;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.2s ease;
+}
+
+.back-button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.back-button .material-symbols-outlined {
+  font-size: 18px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.showcase-main {
+  min-height: 100vh;
+}
+
+.showcase-hero {
+  min-height: clamp(380px, 65vh, 760px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.showcase-hero .hero-content {
+  text-align: center;
+  max-width: 800px;
+  padding: 2rem;
+  z-index: 2;
+}
+
+/* Section ellipsis divider under hero */
+.section-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-block: clamp(24px, 8vh, 72px) !important; /* override any inline spacing */
+  opacity: 0.8;
+}
+.section-ellipsis p {
+  margin: 0;
+  padding: 0;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .showcase-header {
+    padding-block: clamp(6px, 1.5vh, 16px);
+    margin-block-start: clamp(6px, 2.5vh, 16px);
+  }
+  .showcase-header .back-button .material-symbols-outlined { font-size: 24px; }
+}
+
+/* Extra breathing room below footer only on showcase pages */
+.showcase-body footer {
+  margin-block-end: clamp(8px, 3vh, 24px);
+}
+
+.hero-title {
+  font-size: 6rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  line-height: 1;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  margin-bottom: 3rem;
+  font-weight: 350;
+  opacity: 0.9;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.hero-meta .meta-item {
+  font-size: 1rem;
+  color: var(--link-color);
+  font-weight: 400;
+}
+
+.showcase-gallery {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(4, 300px);
+  gap: 1.5rem;
+  padding: 2.5rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+  transform: scale(1.02);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item.large {
+  grid-column: span 8;
+  grid-row: span 2;
+}
+
+.gallery-item:not(.large) {
+  grid-column: span 4;
+  grid-row: span 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+  
+  /* Tablet layout for showcase grid */
+  .showcase-gallery {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 250px);
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+  }
+  
+  .gallery-item.large {
+    grid-column: span 6;
+    grid-row: span 2;
+  }
+  
+  .gallery-item:not(.large) {
+    grid-column: span 3;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  /* Phone layout for showcase grid */
+  .showcase-gallery {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .gallery-item.large,
+  .gallery-item:not(.large) {
+    grid-column: 1;
+    grid-row: auto;
+    height: 300px;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Legacy showcase class for backward compatibility */
+.showcase img {
+  border-radius: 1rem;
+  margin: 0.5rem auto;
+}
+
+.hidden { display: none;
+}
+
+.colophon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.post-header {
+  margin-bottom: 2rem;
+  font-size: 95%;
+}
+
+.post-header h1 {
+  font-weight: 400;
+  color: var(--text-color);
+  margin-bottom: 0;
+}
+
+.post-header h2 {
+  color: var(--link-color);
+  font-weight: 350;
+  font-size: 110%;
+
+}
+
+.blog-post {
+  font-size: 105%;
+  line-height: 1.5;
+  font-weight: 350;
+}
+
+
+
+/* universal below: */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong,
+b {
+  color: var(--text-color);
+}
+
+a {
+  color: var(--link-color);
+  opacity: 100%;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 100ms;
+  text-decoration: none;
+}
+
+
+
+.title {
+  text-decoration: none;
+  border: 0;
+}
+
+.title span {
+  font-weight: 400;
+}
+
+nav a {
+  margin-right: 10px;
+}
+
+textarea {
+  width: 100%;
+  font-size: 16px;
+}
+
+input {
+  font-size: 16px;
+}
+
+table {
+  width: 100%;
+}
+
+img {
+  max-width: 100%;
+}
+
+code {
+  padding: 2px 5px;
+  background-color: var(--code-background);
+}
+
+pre code {
+  color: var(--code-text-color);
+  display: block;
+  padding: 20px;
+  white-space: pre-wrap;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+div.highlight pre {
+  background-color: initial;
+  color: initial;
+}
+
+div.highlight code {
+  background-color: unset;
+  color: unset;
+}
+
+blockquote {
+  border-left: 1px solid var(--blockquote-color);
+  color: var(--blockquote-color);
+  padding-left: 20px;
+}
+
+.helptext {
+  color: #777;
+  font-size: small;
+}
+
+.errorlist {
+  color: #eba613;
+  font-size: small;
+}
+
+/* blog posts */
+ul.blog-posts {
+  list-style-type: none;
+  padding: unset;
+}
+
+ul.blog-posts li {
+  display: flex;
+}
+
+ul.blog-posts li span {
+  flex: 0 0 130px;
+}
+
+.footnote-definition {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
+}
