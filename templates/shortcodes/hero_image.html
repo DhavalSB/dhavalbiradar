@@ -1,0 +1,9 @@
+<div class="showcase-post showcase-header{% if size %} size-{{ size }}{% endif %}">
+    <img src="{{ src }}" loading="lazy" alt="{{ alt | default(value='') }}" data-group="{{ group | default(value='') }}"
+        data-fullsrc="{{ full_src | default(value=src) }}">
+</div>
+{% if caption %}
+<p class="caption">
+    {{ caption | safe }}
+</p>
+{% endif %}

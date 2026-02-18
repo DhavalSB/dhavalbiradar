@@ -1,0 +1,11 @@
+<div class="showcase-post">
+    <img src="{{ left }}" loading="lazy" alt="{{ left_alt | default(value='') }}"
+        data-group="{{ group | default(value='') }}" data-fullsrc="{{ left_full_src | default(value=left) }}">
+    <img src="{{ right }}" loading="lazy" alt="{{ right_alt | default(value='') }}"
+        data-group="{{ group | default(value='') }}" data-fullsrc="{{ right_full_src | default(value=right) }}">
+</div>
+{% if caption %}
+<p class="caption">
+    {{ caption | safe }}
+</p>
+{% endif %}

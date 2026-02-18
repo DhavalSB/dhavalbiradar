@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!--div class="header-image">
+  <center>
+    <image src="/images/1.jpeg" style="border-radius: 3.0em;"/>
+  </center>
+</div-->
+
+
+<!--h2 class="section-header">{{ section.title }}</h2-->
+
+<div>{{ section.content | safe }}</div>
+
+<!-- div class="featured">
+  <h2>Featured</h2>
+  <h3>
+    <a href="/projects/currentFav.md">
+      Current Favorite Title
+      <span class="material-symbols-outlined" style="font-size: 80%; color: var(--link-color);">arrow_forward_ios</span>
+    </a>
+  </h3> 
+
+  <p>
+  June 5, 2025 • Section/Category
+  </p>
+
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  </p>
+  <hr class="section-divider" style="margin-top: 2.5rem;">
+</div-->
+
+<ul class="blog-posts">
+    <!-- If you are using pagination, section.pages will be empty. You need to use the paginator object -->  
+    {% for subsection_path in section.subsections %}
+    {% set subsection = get_section(path=subsection_path) %}
+      {% for page in subsection.pages %}
+        <li>
+          <span>
+              <time datetime={{ page.date }}>
+                {{ page.date }}
+              </time>
+          </span>
+          <a href="{{ page.path | safe }}"> {{ page.description }} {{ page.title }}</a>
+        </li>
+
+      {% endfor %}
+    {% endfor %}
+  </ul>
+
+
+<!--ul class="writing-sections">
+  <li>
+      <a href="/writing/blog">Blog</a> — Essays
+  </li>
+  <li>
+      <a href="/writing/projects">Projects</a> — Projects
+  </li>
+  <li>
+      <a href="/writing/creative">Creative</a>
+  </li>
+
+
+</ul-->
+
+{% endblock %}

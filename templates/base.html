@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<head></head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+<title> Dhaval Biradar </title>
+
+<script src="/themetoggle.js"></script>
+<script async src="/footnote.js"></script>
+<script src="/js/lightbox.js" defer></script>
+<!--script data-goatcounter="https://tbanalytics.goatcounter.com/count" async
+    src="//gc.zgo.at/count.js"></script-->
+
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_back_ios,arrow_forward_ios,chevron_left,chevron_right,close,north_east" />
+<link rel="preload" href="/fonts/Inter-VariableFont_opsz,wght.ttf" as="font" type="font/ttf">
+<link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="stylesheet" href="/style.css" />
+
+{% block extra_head %} {% endblock extra_head %}
+</head>
+
+<body>
+  <header>
+    <div class="directory">
+      <a href="/" class="title">
+        <h1 id="header-name">db</h1>
+      </a>
+
+      {% if page %}
+      {% set path_parts = page.components %}
+      {% if path_parts | length > 0 %}
+      {% set top_section = path_parts[0] %}
+      <div class="directory-link">
+        {% if top_section == "writing" %}
+        <h1 id="header-directory">/</h1>
+        <a href="/writing">
+          {{ top_section }}
+        </a>
+        {% elif top_section == "photos" %}
+        <h1 id="header-directory">/</h1>
+        <a href="/photos">
+          {{ top_section }}
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% endif %}
+      {% if section.title %}
+      <h1 id="header-directory">/</h1>
+      <h1 id="header-directory">{{section.title}}</h1>
+      {% endif %}
+
+    </div>
+
+    <a href="/about" style="">about</a>
+  </header>
+
+  <main>
+    {% block content %} {% endblock %}
+  </main>
+
+  <footer>
+    <hr class="section-divider" style="margin-bottom: 2rem;">
+    <p> dhaval biradar </p>
+    <a> rss </a> ·
+    <a href="https://www.github.com/dhavalsb"> github </a> ·
+    <a href="https://www.linkedin.com/in/dhaval-b-486b1723a/"> linkedin </a> ·
+    <a href="mailto:pythondsb@gmail.com"> email </a>
+    <div class="colophon">
+      <a href="/colophon" id="colophon-button">
+        <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg" color="#4385BE">
+          <path
+            d="M3 15C5.48276 15 7.34483 12 7.34483 12C7.34483 12 9.2069 15 11.6897 15C14.1724 15 16.6552 12 16.6552 12C16.6552 12 19.1379 15 21 15"
+            stroke="#4385BE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path
+            d="M3 20C5.48276 20 7.34483 17 7.34483 17C7.34483 17 9.2069 20 11.6897 20C14.1724 20 16.6552 17 16.6552 17C16.6552 17 19.1379 20 21 20"
+            stroke="#4385BE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M19 10C19 6.13401 15.866 3 12 3C8.13401 3 5 6.13401 5 10" stroke="#4385BE" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </div>
+  </footer>
+</body>

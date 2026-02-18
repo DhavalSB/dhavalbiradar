@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="lightbox" class="lightbox hidden">
+  <div class="lightbox-container">
+    <div class="lightbox-controls">
+      <button class="lightbox-prev hidden">
+        <span class="material-symbols-outlined">arrow_back_ios</span>
+      </button>
+      <button class="lightbox-next hidden">
+        <span class="material-symbols-outlined">arrow_forward_ios</span>
+      </button>
+      <button class="lightbox-close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <img id="lightbox-img" src="" alt="Full Image">
+    <img id="lightbox-img-next" src="" alt="Next Image" class="hidden">
+    <div class="lightbox-dots hidden"></div>
+  </div>
+</div>
+
+<section class="gallery-section">
+  <h1> aerial </h1>
+  <hr class="section-divider">
+  <div class="photo-gallery">
+    <a href="/photos/sb-showcase" class="showcase-link">
+      <img src="/images/gallery/thumbnails/sb1.jpeg" data-fullsrc="/images/gallery/fullsrc/sb1.jpeg">
+      <span class="showcase-indicator"></span>
+    </a>
+    <img src="/images/gallery/thumbnails/shore.jpeg" data-fullsrc="/images/gallery/fullsrc/shore.jpeg">
+    <img src="/images/gallery/thumbnails/monterey.jpg" data-fullsrc="/images/gallery/fullsrc/monterey-1.jpg"
+      data-group="monterey">
+    <img src="" data-fullsrc="/images/gallery/fullsrc/monterey-2.jpeg" data-group="monterey" class="hidden">
+    <img src="" data-fullsrc="/images/gallery/fullsrc/monterey-3.jpeg" data-group="monterey" class="hidden">
+    <img src="" data-fullsrc="/images/gallery/fullsrc/monterey-4.jpeg" data-group="monterey" class="hidden">
+    <img src="/images/gallery/thumbnails/bridge.jpg" data-fullsrc="/images/gallery/fullsrc/bridge.jpg">
+    <img src="/images/gallery/thumbnails/frost.jpeg" data-fullsrc="/images/gallery/fullsrc/frost.jpeg">
+    <img src="/images/gallery/thumbnails/xx.jpeg" data-fullsrc="/images/gallery/fullsrc/xx.jpeg">
+  </div>
+</section>
+
+<section class="gallery-section">
+  <h1> food </h1>
+  <hr class="section-divider">
+  <div class="photo-gallery">
+    <a href="/photos/latte-showcase" class="showcase-link">
+      <img src="/images/gallery/thumbnails/latte.jpeg" data-fullsrc="/images/gallery/showcase/latte/1.jpeg">
+      <span class="showcase-indicator"></span>
+    </a>
+    <img src="/images/gallery/thumbnails/toast.jpeg" data-fullsrc="/images/gallery/fullsrc/toast.jpeg">
+    <img src="/images/gallery/thumbnails/pizza2.jpeg" data-fullsrc="/images/gallery/fullsrc/pizza2.jpeg"
+      data-group="pizza">
+    <img src="" data-fullsrc="/images/gallery/fullsrc/pizza1.jpeg" data-group="pizza" class="hidden">
+    <img src="" data-fullsrc="/images/gallery/fullsrc/dough.jpeg" data-group="pizza" class="hidden">
+  </div>
+
+</section>
+
+<section class="gallery-section">
+  <h1> places </h1>
+  <hr class="section-divider">
+  <div class="photo-gallery">
+    <img src="/images/gallery/thumbnails/ventura.jpg" data-fullsrc="/images/gallery/fullsrc/ventura.jpg">
+  </div>
+</section>
+
+
+{% endblock %}
