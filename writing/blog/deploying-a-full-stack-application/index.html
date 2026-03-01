@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<head></head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+<title> Dhaval Biradar </title>
+
+<script src="/themetoggle.js"></script>
+<script async src="/footnote.js"></script>
+<script src="/js/lightbox.js" defer></script>
+<script data-goatcounter="https://dbanalytics.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_back_ios,arrow_forward_ios,chevron_left,chevron_right,close,north_east" />
+<link rel="preload" href="/fonts/Inter-VariableFont_opsz,wght.ttf" as="font" type="font/ttf">
+<link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="stylesheet" href="/style.css" />
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+            // customised options
+            // • auto-render specific keys, e.g.:
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            // • rendering keys, e.g.:
+            throwOnError : false
+          });
+      });
+  </script>
+
+
+</head>
+
+<body>
+  <header>
+    <div class="directory">
+      <a href="/" class="title">
+        <h1 id="header-name">db</h1>
+      </a>
+
+      
+      
+      
+      
+      <div class="directory-link">
+        
+        <h1 id="header-directory">/</h1>
+        <a href="/writing">
+          writing
+        </a>
+        
+      </div>
+      
+      
+      
+
+    </div>
+
+    <a href="/about">about</a>
+  </header>
+
+  <main>
+    
+<div class="post-header">
+  <h1> Deploying a full-stack web application </h1>
+  <div>
+    <h2> 🌳 </h2>
+    <!--h2>2021-04-03</h2-->
+  </div>
+</div>
+<div class="blog-post">
+  <p>Between lines of code and a website lies the world of
+<a href="https://en.wikipedia.org/wiki/DevOps">DevOps</a>: &quot;Development Operations.&quot;
+Arguably, DevOps is the most overlooked—and challenging—parts of the software
+development lifecycle. Nevertheless, it is still an equally crucial process, and
+it involves everything from version control to build to deployment and scaling.</p>
+<p>The DevOps cycle is not separate from the code: It is a <em>part</em> of the code.
+For jadeocr, we used Git for our <a href="https://en.wikipedia.org/wiki/Version_control">version control</a>
+system and <a href="https://github.com/jadeocr">GitHub</a> as our remote repository and
+project management hub. The platform is where we keep track of issues and manage
+collaborating on code. We also use GitHub as part of our
+<a href="https://www.redhat.com/en/topics/devops/what-is-ci-cd">CI/CD pipeline</a>
+to automatically build the website and server and make the changes live on the
+website.</p>
+<p>Pushing code to the master branch of our GitHub repository triggers numerous
+GitHub workflows that comprise our CI/CD process. GitHub first sends a ping
+across the web—an <a href="https://www.codecademy.com/articles/http-requests">HTTP POST</a>
+request—to our server. After receiving the request from GitHub, a continuous deployment
+server written in Node.js—previously in Golang—quickly goes to work, pulling
+the latest code from the GitHub master branch and uses
+<a href="https://docs.docker.com/compose/">Docker Compose</a> to build and start the
+application <a href="https://www.docker.com/resources/what-container">containers</a>,
+which are isolated environments called in which application code can run. The
+server simply executes a series of shell commands after it receives a request
+at a particular <a href="https://en.wikipedia.org/wiki/API">API</a> endpoint; from a
+technical perspective, therefore, this system is quite simple.</p>
+<p>Afterward, a GitHub action builds the jadeocr-next client and the server into
+their respective Docker images and publishes them to the
+<a href="https://docs.github.com/en/packages/guides/about-github-container-registry">GitHub Container Registry</a>.
+These containers solve the common issue of &quot;it works on my machine&quot; and make
+building, deploying, and scaling applications with
+<a href="https://en.wikipedia.org/wiki/Kubernetes">Kubernetes</a> relatively straightforward
+<sup class="footnote-reference"><a href="#1">1</a></sup>. Although I faced several (frustrating) hurdles while writing the
+initial configuration files for these Docker containers, managing them after
+the initial setup process has been a breeze.</p>
+<p>Perhaps the most complex individual cog in this software
+development machine is <a href="https://en.wikipedia.org/wiki/Nginx">Nginx</a> (Engine-X)
+server and reverse proxy. Nginx is simply a web server, but it can also function
+as a <a href="https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/">reverse proxy</a>
+to direct web traffic to its intended destination. We use Nginx in two places:
+in front of the website's static files and in front of the entire website.</p>
+<p>When we build the website files into the HTML, CSS, and JavaScript that the
+browser renders after loading <a href="https://next.jadeocr.com">jadeocr-next</a>, our web
+framework's build tool, <a href="https://cli.vuejs.org/">Vue CLI</a>, creates a directory
+of static files that must be served by a web server. Therefore, we use Nginx in
+front of the client to serve these static files. We then use <em>another</em> Nginx
+server in our cloud virtual machine to direct API requests to our web server
+and website requests to the aforementioned client Nginx server. </p>
+<p>Although each system is fairly simple on its own, the confluence of all these
+tools in a single pipeline creates many moving parts which are challenging—but
+fun—to manage. Perhaps such a DevOps system is overkill for such a small
+application, but it provides jadeocr-next with the ability to easily scale and
+avoid future errors. Most importantly, however, going through this DevOps
+journey has been a valuable and fulfilling experience for me—even if I do
+sometimes spend multiple days staring at a terminal window in confusion.</p>
+<p><code>:wq</code></p>
+<hr />
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>For now, we are running jadeocr-next on a virtual private server (VPS),
+but we do plan to deploy a Kubernetes cluster in the future.</p>
+</div>
+
+</div>
+
+  </main>
+
+  <footer>
+    <hr class="section-divider" style="margin-bottom: 2rem;">
+    <p> dhaval biradar </p>
+    <a href="/atom.xml"> rss </a> ·
+    <a href="https://www.github.com/dhavalsb"> github </a> ·
+    <a href="https://www.linkedin.com/in/dhaval-b-486b1723a/"> linkedin </a> ·
+    <a href="mailto:pythondsb@gmail.com"> email </a>
+  </footer>
+</body>
