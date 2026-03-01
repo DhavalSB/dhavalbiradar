@@ -1,7 +1,10 @@
 +++
 title = "Kitchen Freedom"
 date = 2025-07-02
-description = "July 2, 2025 · Home Cooking "
+description = "July 2, 2025"
+
+[extra]
+category = "Home Cooking"
 +++
 
 

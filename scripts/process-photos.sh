@@ -14,7 +14,7 @@ mkdir -p "$INPUT_DIR" "$THUMB_DIR" "$FULL_DIR"
 
 # Check for images
 shopt -s nullglob
-images=("$INPUT_DIR"/*.{jpeg,jpg,png,JPEG,JPG,PNG,heic,HEIC,dng,DNG})
+images=("$INPUT_DIR"/*.{jpeg,jpg,png,JPEG,JPG,PNG,heic,HEIC,dng,DNG,tiff,tif,TIFF,TIF})
 
 if [ ${#images[@]} -eq 0 ]; then
   echo "No images found in $INPUT_DIR"
@@ -33,8 +33,8 @@ for img in "${images[@]}"; do
   echo "Processing: $(basename "$img")"
 
   # DNG/RAW files need a two-step process: convert to JPEG first, then resize
-  if [[ "$ext" =~ ^(dng|DNG)$ ]]; then
-    echo "  Converting RAW to JPEG..."
+  if [[ "$ext" =~ ^(dng|DNG|tiff|tif|TIFF|TIF)$ ]]; then
+    echo "  Converting $ext to JPEG..."
     tmpfile=$(mktemp /tmp/photo_convert_XXXXXX.jpeg)
     sips -s format jpeg "$img" --out "$tmpfile" 2>/dev/null
     src="$tmpfile"

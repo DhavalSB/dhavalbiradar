@@ -179,7 +179,7 @@ footer a {
   justify-content: center;
   font-size: 150%;
   font-weight: 200;
-  margin: 1rem;
+  margin: 0.3rem;
   color: var(--link-color);
   gap: 0.7rem;
 }
@@ -676,7 +676,7 @@ footer a {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  margin-block: clamp(24px, 8vh, 72px) !important;
+  margin-block: clamp(12px, 4vh, 40px) !important;
   /* override any inline spacing */
   opacity: 0.8;
 }
@@ -819,15 +819,50 @@ blockquote {
 /* blog posts */
 ul.blog-posts {
   list-style-type: none;
-  padding: unset;
+  padding: 0;
+  margin: 1rem 0;
 }
 
 ul.blog-posts li {
   display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color, rgba(128, 128, 128, 0.15));
 }
 
-ul.blog-posts li span {
-  flex: 0 0 130px;
+ul.blog-posts li:last-child {
+  border-bottom: none;
+}
+
+ul.blog-posts li time {
+  flex-shrink: 0;
+  font-size: 90%;
+  font-weight: 300;
+  color: var(--link-color);
+  font-variant-numeric: tabular-nums;
+}
+
+ul.blog-posts li a {
+  flex: 1;
+  font-size: 110%;
+  font-weight: 400;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+ul.blog-posts li a:hover {
+  color: var(--link-color);
+}
+
+.post-category {
+  color: var(--link-color);
+}
+
+.post-category::before {
+  content: "·";
+  margin: 0 0.5rem;
 }
 
 

@@ -1,1 +1,12 @@
-<h1> hi there buddy, you have been led astray [404] </h1>
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh;">
+    <h1 style="font-size: clamp(6rem, 15vw, 12rem); font-weight: 250; margin: 0; line-height: 1;">404</h1>
+    <p style="font-weight: 300; font-size: 110%; color: var(--link-color); margin-top: 1.5rem;">Hi there buddy, you've
+        been led astray :(
+    </p>
+</div>
+
+{% endblock content %}

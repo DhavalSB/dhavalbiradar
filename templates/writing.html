@@ -33,22 +33,19 @@
 </div-->
 
 <ul class="blog-posts">
-    <!-- If you are using pagination, section.pages will be empty. You need to use the paginator object -->  
-    {% for subsection_path in section.subsections %}
-    {% set subsection = get_section(path=subsection_path) %}
-      {% for page in subsection.pages %}
-        <li>
-          <span>
-              <time datetime={{ page.date }}>
-                {{ page.date }}
-              </time>
-          </span>
-          <a href="{{ page.path | safe }}"> {{ page.description }} {{ page.title }}</a>
-        </li>
-
-      {% endfor %}
-    {% endfor %}
-  </ul>
+  {% set all_pages = [] %}
+  {% for subsection_path in section.subsections %}
+  {% set subsection = get_section(path=subsection_path) %}
+  {% set_global all_pages = all_pages | concat(with=subsection.pages) %}
+  {% endfor %}
+  {% for page in all_pages | sort(attribute="date") | reverse %}
+  <li>
+    <time datetime={{ page.date }}>{{ page.date | date(format="%m/%d/%Y") }}</time>
+    <a href="{{ page.path | safe }}">{{ page.title }}{% if page.extra.category %}<span class="post-category">{{
+        page.extra.category }}</span>{% endif %}</a>
+  </li>
+  {% endfor %}
+</ul>
 
 
 <!--ul class="writing-sections">
