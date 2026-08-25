@@ -6,9 +6,10 @@ template = "now.html"
 <em>Nothing much, just cruising lately: </em>
 
 ## Projects/Learning
-- planning some more cross country flights 
+- applying to internships and research labs
+- getting ready for college life
 - building this website
 
 ## Life
 - trying to spend more time with friends/family
-- waiting for college results
+- finding great restaurants

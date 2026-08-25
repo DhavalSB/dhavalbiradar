@@ -2,24 +2,7 @@
 
 {% block content %}
 
-<div id="lightbox" class="lightbox hidden">
-  <div class="lightbox-container">
-    <div class="lightbox-controls">
-      <button class="lightbox-prev hidden">
-        <span class="material-symbols-outlined">arrow_back_ios</span>
-      </button>
-      <button class="lightbox-next hidden">
-        <span class="material-symbols-outlined">arrow_forward_ios</span>
-      </button>
-      <button class="lightbox-close">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-    <img id="lightbox-img" src="" alt="Full Image">
-    <img id="lightbox-img-next" src="" alt="Next Image" class="hidden">
-    <div class="lightbox-dots hidden"></div>
-  </div>
-</div>
+{% include "lightbox.html" %}
 
 <section class="gallery-section">
   <h1> aerial </h1>
@@ -66,6 +49,7 @@
     <img src="" data-fullsrc="/images/gallery/fullsrc/pizza/dough.jpeg" data-group="pizza" class="hidden">
 
     <img src="/images/gallery/thumbnails/7kitchens.jpeg" data-fullsrc="/images/gallery/fullsrc/7kitchens.jpeg">
+    <img src="/images/gallery/thumbnails/croissants.jpeg" data-fullsrc="/images/gallery/fullsrc/croissants.jpeg">
   </div>
 
 </section>

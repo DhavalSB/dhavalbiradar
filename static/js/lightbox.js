@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const galleryImages = document.querySelectorAll(".photo-gallery img, .showcase-gallery img");
+  const lightboxLinks = document.querySelectorAll("a.lightbox-link");
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
   const nextImg = document.getElementById("lightbox-img-next");
@@ -7,6 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const prevButton = document.querySelector(".lightbox-prev");
   const nextButton = document.querySelector(".lightbox-next");
   const dotsContainer = document.querySelector(".lightbox-dots");
+
+  if (!lightbox || !lightboxImg) return;
 
   let currentGroup = [];
   let currentIndex = 0;
@@ -150,6 +153,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const group = groupName ? groups[groupName] : null;
 
       openLightbox(fullSrc, group);
+    });
+  });
+
+  lightboxLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const fullSrc = link.getAttribute("data-fullsrc") || link.getAttribute("href");
+      openLightbox(fullSrc, null);
     });
   });
 
