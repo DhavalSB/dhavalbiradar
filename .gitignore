@@ -1,3 +1,11 @@
-public/
+/public/
+/.wrangler/
 static/images/gallery/originals/
 .DS_Store
+worker/node_modules/
+worker/.wrangler/
+worker/.dev.vars
+worker/public/js/
+worker/public/style.css
+worker/public/flexoki.css
+worker/public/metar-map.css

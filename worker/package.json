@@ -1,0 +1,21 @@
+{
+  "name": "metar-map-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "assets": "mkdir -p public/js && cp ../static/js/metar-map.js public/js/ && cp ../static/metar-map.css public/ && cp ../static/flexoki.css public/ && cp ../static/style.css public/",
+    "test": "vitest run",
+    "dev": "npm run assets && wrangler dev --port 8788",
+    "deploy": "npm run assets && wrangler deploy",
+    "d1:create": "wrangler d1 create metar-map"
+  },
+  "dependencies": {
+    "hono": "^4.9.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.33.1"
+  }
+}

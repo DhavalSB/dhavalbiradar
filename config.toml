@@ -17,4 +17,7 @@ feed_filenames = ["atom.xml"]
 theme = "github-dark"
 
 [extra]
-# Put all your custom variables here
+# Origin of the METAR map API (no trailing slash). Empty = same origin.
+# After `wrangler deploy`, set this to the printed workers.dev origin so
+# https://dhavalbiradar.com/metar-map can reach the API from GitHub Pages.
+metar_map_api_origin = "https://dhavalbiradar-metar-map.dhavalbiradar.workers.dev"

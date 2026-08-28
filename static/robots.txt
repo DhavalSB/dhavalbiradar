@@ -1,3 +1,7 @@
+User-agent: *
+Disallow: /metar-map
+Disallow: /metar-map/
+
 # Dark Visitors robots.txt
 
 # AI Assistant

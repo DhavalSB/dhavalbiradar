@@ -1,0 +1,344 @@
+@font-face {
+  font-family: "Inter";
+  src: url("https://dhavalbiradar.com/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.metar-map {
+  --metar-border: rgba(255, 255, 255, 0.08);
+  --metar-card: rgba(20, 20, 20, 0.65);
+  --metar-ok: var(--flexoki-green-400, #879a39);
+  --metar-warn: var(--flexoki-orange-300, #ec8b49);
+  --metar-bad: var(--flexoki-red-400, #d14d41);
+  --metar-muted: var(--flexoki-500, #878580);
+}
+
+.metar-map,
+.metar-map * {
+  transition: none;
+}
+
+.metar-map {
+  animation: metar-slide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes metar-slide {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.metar-card {
+  background: var(--metar-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--metar-border);
+  border-radius: 1rem;
+  padding: 1.25rem 1.35rem;
+  margin: 0 0 1rem;
+}
+
+.metar-card h2 {
+  font-weight: 400;
+  font-size: 110%;
+  margin: 0 0 0.85rem;
+}
+
+.metar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.65rem 0;
+}
+
+.metar-row label,
+.metar-field-label {
+  font-weight: 350;
+  font-size: 100%;
+}
+
+.metar-help {
+  color: var(--metar-muted);
+  font-weight: 300;
+  font-size: 90%;
+  margin: 0.35rem 0 0;
+  line-height: 1.45;
+}
+
+.metar-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+}
+
+.metar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 85%;
+  font-weight: 400;
+  border: 1px solid var(--metar-border);
+  color: var(--text-color);
+}
+
+.metar-pill::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--metar-muted);
+}
+
+.metar-pill.is-online::before {
+  background: var(--metar-ok);
+}
+
+.metar-pill.is-offline::before {
+  background: var(--metar-bad);
+}
+
+.metar-pill.is-unknown::before {
+  background: var(--metar-muted);
+}
+
+.metar-pill.is-busy::before {
+  background: var(--metar-warn);
+  animation: metar-pulse 1s ease-in-out infinite;
+}
+
+@keyframes metar-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.metar-banner {
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(218, 112, 44, 0.12);
+  border: 1px solid rgba(236, 139, 73, 0.25);
+  color: var(--flexoki-orange-200, #f9ae77);
+  font-weight: 350;
+  font-size: 95%;
+}
+
+.metar-banner.is-info {
+  background: rgba(135, 154, 57, 0.1);
+  border-color: rgba(135, 154, 57, 0.25);
+  color: var(--flexoki-200, #cecdc3);
+}
+
+.metar-switch {
+  position: relative;
+  width: 3rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+}
+
+.metar-switch input {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.metar-switch span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--flexoki-800, #403e3c);
+  border: 1px solid var(--metar-border);
+}
+
+.metar-switch span::after {
+  content: "";
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--flexoki-200, #cecdc3);
+}
+
+.metar-switch input:checked + span {
+  background: var(--flexoki-orange-600, #bc5215);
+}
+
+.metar-switch input:checked + span::after {
+  left: 1.45rem;
+  background: var(--flexoki-paper, #fffcf0);
+}
+
+.metar-switch input:focus-visible + span {
+  outline: 2px solid var(--flexoki-orange-300, #ec8b49);
+  outline-offset: 2px;
+}
+
+.metar-switch input:disabled {
+  cursor: not-allowed;
+}
+
+.metar-times {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.metar-times label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 90%;
+  font-weight: 350;
+  color: var(--metar-muted);
+}
+
+.metar-map input[type="time"],
+.metar-map input[type="number"],
+.metar-map input[type="password"] {
+  font: inherit;
+  font-size: 16px;
+  color: var(--text-color);
+  background: var(--flexoki-950, #1c1b1a);
+  border: 1px solid var(--metar-border);
+  border-radius: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.metar-map input[type="range"] {
+  width: 100%;
+  accent-color: var(--flexoki-orange-400, #da702c);
+  height: 2rem;
+  margin: 0.25rem 0;
+}
+
+.metar-bright-readout {
+  font-variant-numeric: tabular-nums;
+  color: var(--metar-muted);
+  font-weight: 300;
+  font-size: 90%;
+  margin: 0;
+}
+
+.metar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.metar-btn {
+  font: inherit;
+  font-weight: 400;
+  font-size: 95%;
+  border: 1px solid var(--metar-border);
+  background: var(--flexoki-900, #282726);
+  color: var(--text-color);
+  border-radius: 0.75rem;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+
+.metar-btn.primary {
+  background: var(--flexoki-orange-600, #bc5215);
+  border-color: transparent;
+  color: var(--flexoki-paper, #fffcf0);
+}
+
+.metar-btn:hover {
+  color: var(--text-color);
+}
+
+.metar-btn.primary:hover {
+  background: var(--flexoki-orange-400, #da702c);
+  color: var(--flexoki-paper, #fffcf0);
+}
+
+.metar-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.metar-login p {
+  font-weight: 300;
+  margin: 0 0 1rem;
+}
+
+.metar-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.metar-error {
+  color: var(--metar-bad);
+  font-size: 90%;
+  font-weight: 350;
+  margin: 0.4rem 0 0;
+}
+
+.metar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.metar-logout {
+  background: none;
+  border: none;
+  color: var(--link-color);
+  font: inherit;
+  font-weight: 300;
+  cursor: pointer;
+  padding: 0;
+}
+
+.metar-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+.metar-dl dt {
+  color: var(--metar-muted);
+}
+
+.metar-dl dd {
+  margin: 0;
+}
+
+@media (max-width: 520px) {
+  .metar-times {
+    grid-template-columns: 1fr;
+  }
+
+  .metar-row {
+    align-items: flex-start;
+  }
+}

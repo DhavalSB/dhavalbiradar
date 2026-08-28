@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="/metar-map.css" />
+<script>
+  window.METAR_API_ORIGIN = "{{ config.extra.metar_map_api_origin | default(value='') | safe }}";
+</script>
+{% endblock extra_head %}
+
+{% block content %}
+<div id="metar-map-app"></div>
+<script src="/js/metar-map.js" defer></script>
+{% endblock %}
