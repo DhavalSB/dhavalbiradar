@@ -20,6 +20,7 @@ import {
 } from "./types";
 import {
   cloneDesired,
+  coerceInt,
   desiredFromReported,
   HttpError,
   isBool,
@@ -52,15 +53,6 @@ function applyCors(response: Response, origin: string | null): Response {
   const next = new Headers(response.headers);
   for (const [key, value] of Object.entries(headers)) next.set(key, value);
   return new Response(response.body, { status: response.status, headers: next });
-}
-
-async function readReported(request: Request): Promise<Reported> {
-  const text = await request.text();
-  const parsed = parseJsonBody(text);
-  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
-    throw new HttpError(400, "invalid json");
-  }
-  return parsed as Reported;
 }
 
 function deviceIdOk(request: Request, reported: Reported): boolean {
@@ -105,15 +97,20 @@ export function createApp(opts: { store?: MetarStore } = {}) {
 
   app.post("/api/metar-map/sync", async (c) => {
     await requireDevice(c);
-    const reported = await readReported(c.req.raw);
+    let reported: Reported;
+    try {
+      reported = (await c.req.json()) as Reported;
+    } catch {
+      throw new HttpError(400, "invalid json");
+    }
+    if (!reported || typeof reported !== "object" || Array.isArray(reported)) {
+      throw new HttpError(400, "invalid json");
+    }
     if (!deviceIdOk(c.req.raw, reported)) throw new HttpError(400, "unknown device");
 
     const store = c.get("store");
     let row = await store.get(DEVICE_ID);
-    const applied =
-      typeof reported.appliedCommandId === "number" && Number.isFinite(reported.appliedCommandId)
-        ? Math.trunc(reported.appliedCommandId)
-        : 0;
+    const applied = coerceInt(reported.appliedCommandId) ?? 0;
 
     if (!row) {
       row = {
@@ -217,10 +214,7 @@ export function createApp(opts: { store?: MetarStore } = {}) {
       if (patch.on) current.desired.on = patch.on;
       if (patch.off) current.desired.off = patch.off;
       if (patch.scheduleEnabled === false) {
-        const applied =
-          typeof current.reported?.appliedCommandId === "number"
-            ? current.reported.appliedCommandId
-            : 0;
+        const applied = coerceInt(current.reported?.appliedCommandId) ?? 0;
         if (current.commandId <= applied && isBool(current.reported?.displayOn)) {
           current.desired.displayOn = current.reported.displayOn;
         }

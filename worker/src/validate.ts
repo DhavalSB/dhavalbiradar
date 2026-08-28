@@ -21,6 +21,21 @@ export function isBool(value: unknown): value is boolean {
   return value === true || value === false;
 }
 
+export function coerceBool(value: unknown): boolean | undefined {
+  if (value === true || value === "true") return true;
+  if (value === false || value === "false") return false;
+  return undefined;
+}
+
+export function coerceInt(value: unknown): number | undefined {
+  if (typeof value === "number" && Number.isFinite(value)) return Math.trunc(value);
+  if (typeof value === "string" && value.trim() !== "") {
+    const n = Number(value);
+    if (Number.isFinite(n)) return Math.trunc(n);
+  }
+  return undefined;
+}
+
 export function clampInt(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, Math.round(value)));
 }
@@ -140,26 +155,29 @@ export function parseLoginBody(body: unknown): string {
 export function desiredFromReported(reported: Reported): Desired {
   const schedule = reported.schedule && typeof reported.schedule === "object" ? reported.schedule : {};
   let brightness = DEFAULT_BRIGHTNESS;
-  if (typeof reported.brightness === "number" && Number.isFinite(reported.brightness)) {
-    brightness = clampInt(reported.brightness, 0, 255);
-  } else if (typeof reported.brightnessPercent === "number") {
-    brightness = brightnessFromPercent(reported.brightnessPercent);
+  const parsedBrightness = coerceInt(reported.brightness);
+  if (parsedBrightness !== undefined) {
+    brightness = clampInt(parsedBrightness, 0, 255);
+  } else {
+    const percent = coerceInt(reported.brightnessPercent);
+    if (percent !== undefined) brightness = brightnessFromPercent(percent);
   }
 
   let refreshIntervalMs = DEFAULT_REFRESH_INTERVAL_MS;
-  if (typeof reported.refreshIntervalMs === "number" && Number.isFinite(reported.refreshIntervalMs)) {
-    refreshIntervalMs = Math.max(MIN_REFRESH_INTERVAL_MS, Math.round(reported.refreshIntervalMs));
-  } else if (typeof reported.refreshIntervalMinutes === "number") {
-    refreshIntervalMs = Math.max(
-      MIN_REFRESH_INTERVAL_MS,
-      Math.round(reported.refreshIntervalMinutes * 60_000),
-    );
+  const parsedInterval = coerceInt(reported.refreshIntervalMs);
+  if (parsedInterval !== undefined) {
+    refreshIntervalMs = Math.max(MIN_REFRESH_INTERVAL_MS, parsedInterval);
+  } else {
+    const minutes = coerceInt(reported.refreshIntervalMinutes);
+    if (minutes !== undefined) {
+      refreshIntervalMs = Math.max(MIN_REFRESH_INTERVAL_MS, minutes * 60_000);
+    }
   }
 
   return {
     brightness,
-    displayOn: isBool(reported.displayOn) ? reported.displayOn : true,
-    scheduleEnabled: isBool(schedule.enabled) ? schedule.enabled : true,
+    displayOn: coerceBool(reported.displayOn) ?? true,
+    scheduleEnabled: coerceBool(schedule.enabled) ?? true,
     on: normalizeTime(schedule.on) ?? "10:00",
     off: normalizeTime(schedule.off) ?? "22:00",
     refreshIntervalMs,

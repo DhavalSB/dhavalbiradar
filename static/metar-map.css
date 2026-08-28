@@ -20,6 +20,11 @@
   transition: none;
 }
 
+/* Author `display` rules below outrank the UA sheet's [hidden] { display: none }. */
+.metar-map [hidden] {
+  display: none;
+}
+
 .metar-map.metar-enter {
   animation: metar-slide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

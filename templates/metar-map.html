@@ -2,7 +2,7 @@
 
 {% block extra_head %}
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/metar-map.css?v=2" />
+<link rel="stylesheet" href="/metar-map.css?v=3" />
 <script>
   window.METAR_API_ORIGIN = "{{ config.extra.metar_map_api_origin | default(value='') | safe }}";
 </script>
@@ -10,5 +10,5 @@
 
 {% block content %}
 <div id="metar-map-app"></div>
-<script src="/js/metar-map.js?v=2" defer></script>
+<script src="/js/metar-map.js?v=3" defer></script>
 {% endblock %}

@@ -44,7 +44,7 @@ export class D1Store implements MetarStore {
     if (!row) return null;
     return {
       deviceId: row.device_id,
-      commandId: row.command_id,
+      commandId: Number(row.command_id) || 0,
       refreshNow: Boolean(row.refresh_now),
       desired: JSON.parse(row.desired_json),
       reported: row.reported_json ? JSON.parse(row.reported_json) : null,

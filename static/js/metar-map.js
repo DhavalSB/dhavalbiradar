@@ -77,7 +77,7 @@
   }
 
   function phaseLabel(status) {
-    if (status.loading || status.phase === "fetching") return "Updating weather…";
+    if (status.loading === true || status.phase === "fetching") return "Updating weather…";
     switch (status.phase) {
       case "boot":
         return "Starting up…";
@@ -146,8 +146,9 @@
   }
 
   function viewModel(status) {
-    const pending = status.pendingCommandId > status.appliedCommandId;
-    const busy = Boolean(status.loading || status.phase === "fetching" || optimisticLoading);
+    const pending = Number(status.pendingCommandId) > Number(status.appliedCommandId);
+    const weatherBusy = status.loading === true || (status.phase === "fetching" && status.loading !== false);
+    const busy = Boolean(weatherBusy || optimisticLoading);
     const kind = connectionKind(status);
     const brightness = dragging
       ? Number($("metar-brightness")?.value || status.brightness)
@@ -380,7 +381,8 @@
       }
       if (!res.ok) return;
       lastStatus = data;
-      if (data && (data.loading || data.phase === "fetching")) optimisticLoading = false;
+      if (data.loading === true || data.phase === "fetching") optimisticLoading = false;
+      else if (Number(data.pendingCommandId) <= Number(data.appliedCommandId)) optimisticLoading = false;
       showDashboard(data);
       schedulePoll(data);
     } catch {
@@ -410,8 +412,8 @@
   function schedulePoll(status) {
     stopPoll();
     const busy =
-      Boolean(status && (status.loading || status.phase === "fetching" || optimisticLoading)) ||
-      Boolean(status && status.pendingCommandId > status.appliedCommandId);
+      Boolean(status && (status.loading === true || status.phase === "fetching" || optimisticLoading)) ||
+      Boolean(status && Number(status.pendingCommandId) > Number(status.appliedCommandId));
     pollTimer = setTimeout(loadAndRender, busy ? 1000 : 3000);
   }
 
@@ -427,8 +429,8 @@
         return;
       }
       lastStatus = data;
-      if (data.loading || data.phase === "fetching") optimisticLoading = false;
-      else if (data.pendingCommandId <= data.appliedCommandId) optimisticLoading = false;
+      if (data.loading === true || data.phase === "fetching") optimisticLoading = false;
+      else if (Number(data.pendingCommandId) <= Number(data.appliedCommandId)) optimisticLoading = false;
       showDashboard(data);
       schedulePoll(data);
     } catch {

@@ -162,6 +162,29 @@ describe("device sync", () => {
     expect(body.refreshNow).toBe(false);
   });
 
+  it("acks commandId when the device sends appliedCommandId as a string", async () => {
+    const { app } = await setup();
+    await sync(app, reported());
+    const { token } = await login(app);
+    await sessionReq(
+      app,
+      "/api/metar-map/brightness",
+      { method: "PUT", body: JSON.stringify({ value: 80 }) },
+      token!,
+    );
+    const acked = await sync(app, reported({ appliedCommandId: "1" as unknown as number, brightness: 80 }));
+    expect(acked.status).toBe(200);
+    const after = await acked.json();
+    expect(after.commandId).toBe(1);
+    expect(after.refreshNow).toBe(false);
+
+    const statusRes = await sessionReq(app, "/api/metar-map/status", { method: "GET" }, token!);
+    const status = await statusRes.json();
+    expect(status.appliedCommandId).toBe(1);
+    expect(status.pendingCommandId).toBe(1);
+    expect(status.loading).toBe(false);
+  });
+
   it("does not increment commandId on later heartbeats", async () => {
     const { app } = await setup();
     await sync(app, reported());
@@ -195,6 +218,24 @@ describe("user mutations", () => {
     const acked = await sync(app, reported({ appliedCommandId: 1, brightness: 80 }));
     const after = await acked.json();
     expect(after.commandId).toBe(1);
+  });
+
+  it("stops showing pending when reported state already matches desired", async () => {
+    const { app } = await setup();
+    await sync(app, reported());
+    const { token } = await login(app);
+    await sessionReq(
+      app,
+      "/api/metar-map/brightness",
+      { method: "PUT", body: JSON.stringify({ value: 80 }) },
+      token!,
+    );
+    await sync(app, reported({ appliedCommandId: 0, brightness: 80 }));
+    const statusRes = await sessionReq(app, "/api/metar-map/status", { method: "GET" }, token!);
+    const status = await statusRes.json();
+    expect(status.pendingCommandId).toBe(status.appliedCommandId);
+    expect(status.loading).toBe(false);
+    expect(status.desired).toBeUndefined();
   });
 
   it("sets refreshNow until the device applies that command", async () => {
