@@ -20,7 +20,7 @@
   transition: none;
 }
 
-.metar-map {
+.metar-map.metar-enter {
   animation: metar-slide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 

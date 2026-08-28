@@ -28,6 +28,7 @@
   let lastSentBrightness = null;
   let lastStatus = null;
   let optimisticLoading = false;
+  let dashboardReady = false;
 
   function headers(jsonBody) {
     const h = { Accept: "application/json" };
@@ -114,9 +115,79 @@
       .replace(/"/g, "&quot;");
   }
 
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function setText(id, value) {
+    const el = $(id);
+    if (el && el.textContent !== value) el.textContent = value;
+  }
+
+  function setHidden(id, hidden) {
+    const el = $(id);
+    if (el) el.hidden = hidden;
+  }
+
+  function fieldBusy(el) {
+    return Boolean(el && (document.activeElement === el || dragging));
+  }
+
+  function setChecked(id, value) {
+    const el = $(id);
+    if (!el || fieldBusy(el)) return;
+    if (el.checked !== value) el.checked = value;
+  }
+
+  function setValue(id, value) {
+    const el = $(id);
+    if (!el || fieldBusy(el)) return;
+    if (String(el.value) !== String(value)) el.value = value;
+  }
+
+  function viewModel(status) {
+    const pending = status.pendingCommandId > status.appliedCommandId;
+    const busy = Boolean(status.loading || status.phase === "fetching" || optimisticLoading);
+    const kind = connectionKind(status);
+    const brightness = dragging
+      ? Number($("metar-brightness")?.value || status.brightness)
+      : status.desired && pending
+        ? status.desired.brightness
+        : status.brightness;
+    const schedule = status.desired && pending ? status.desired.schedule : status.schedule;
+    const displayOn = status.desired && pending ? status.desired.displayOn : status.displayOn;
+    const intervalMs =
+      status.desired && pending ? status.desired.refreshIntervalMs : status.refreshIntervalMs;
+    let banner = "";
+    let bannerInfo = true;
+    if (busy) {
+      banner = "Updating weather…";
+      bannerInfo = false;
+    } else if (pending) {
+      banner = kind === "online" ? "Sending to the map…" : "Saved. The map will apply this when it reconnects.";
+    } else if (kind === "offline") {
+      banner = "Map is offline. Controls stay available and apply when it reconnects.";
+    } else if (kind === "unknown") {
+      banner = "Map has not checked in yet. Settings are saved for the first connection.";
+    }
+    return {
+      pending,
+      busy,
+      kind,
+      brightness,
+      percent: Math.round((brightness * 100) / 255),
+      schedule,
+      displayOn,
+      intervalMin: Math.round((intervalMs / 60000) * 100) / 100,
+      banner,
+      bannerInfo,
+    };
+  }
+
   function renderLogin(error) {
+    dashboardReady = false;
     root.innerHTML =
-      '<div class="metar-map"><div class="metar-card metar-login">' +
+      '<div class="metar-map metar-enter"><div class="metar-card metar-login">' +
       "<h2>METAR map</h2>" +
       "<p>Private control for the LED weather map.</p>" +
       '<form class="metar-login-form" id="metar-login">' +
@@ -126,9 +197,9 @@
       '<div class="metar-actions"><button class="metar-btn primary" type="submit">Log in</button></div>' +
       "</form></div></div>";
 
-    document.getElementById("metar-login").addEventListener("submit", async (event) => {
+    $("metar-login").addEventListener("submit", async (event) => {
       event.preventDefault();
-      const password = document.getElementById("metar-password").value;
+      const password = $("metar-password").value;
       try {
         const { res, data } = await api("/api/metar-map/login", {
           method: "POST",
@@ -147,132 +218,73 @@
     });
   }
 
-  function renderDashboard(status) {
-    const pending = status.pendingCommandId > status.appliedCommandId;
-    const busy = Boolean(status.loading || status.phase === "fetching" || optimisticLoading);
-    const kind = connectionKind(status);
-    const brightness = dragging
-      ? Number(document.getElementById("metar-brightness")?.value || status.brightness)
-      : status.desired && pending
-        ? status.desired.brightness
-        : status.brightness;
-    const percent = Math.round((brightness * 100) / 255);
-    const schedule = status.desired && pending ? status.desired.schedule : status.schedule;
-    const displayOn = status.desired && pending ? status.desired.displayOn : status.displayOn;
-    const intervalMs =
-      status.desired && pending ? status.desired.refreshIntervalMs : status.refreshIntervalMs;
-    const intervalMin = Math.round((intervalMs / 60000) * 100) / 100;
-
-    let banner = "";
-    if (busy) {
-      banner = '<div class="metar-banner" role="status">Updating weather…</div>';
-    } else if (pending) {
-      banner =
-        '<div class="metar-banner is-info" role="status">' +
-        (kind === "online" ? "Sending to the map…" : "Saved. The map will apply this when it reconnects.") +
-        "</div>";
-    } else if (kind === "offline") {
-      banner =
-        '<div class="metar-banner is-info" role="status">Map is offline. Controls stay available and apply when it reconnects.</div>';
-    } else if (kind === "unknown") {
-      banner =
-        '<div class="metar-banner is-info" role="status">Map has not checked in yet. Settings are saved for the first connection.</div>';
-    }
-
+  function mountDashboard() {
+    if (dashboardReady) return;
     root.innerHTML =
-      '<div class="metar-map">' +
+      '<div class="metar-map metar-enter">' +
       '<div class="metar-top"><span></span><button type="button" class="metar-logout" id="metar-logout">log out</button></div>' +
       '<div class="metar-card">' +
       "<h2>Connection</h2>" +
       '<div class="metar-status">' +
-      '<span class="metar-pill is-' +
-      kind +
-      (busy ? " is-busy" : "") +
-      '">' +
-      escapeHtml(connectionText(status)) +
-      "</span>" +
-      (busy ? '<span class="metar-pill is-busy">Updating weather</span>' : "") +
-      (pending && !busy ? '<span class="metar-pill">Sending…</span>' : "") +
+      '<span class="metar-pill" id="metar-pill-conn">Online</span>' +
+      '<span class="metar-pill is-busy" id="metar-pill-busy" hidden>Updating weather</span>' +
+      '<span class="metar-pill" id="metar-pill-send" hidden>Sending…</span>' +
       "</div>" +
-      banner +
+      '<div class="metar-banner is-info" id="metar-banner" hidden></div>' +
       "</div>" +
       '<div class="metar-card">' +
       "<h2>Power</h2>" +
       '<div class="metar-row"><label for="metar-power">Display</label>' +
-      '<div class="metar-switch"><input id="metar-power" type="checkbox"' +
-      (displayOn ? " checked" : "") +
-      '><span></span></div></div>' +
+      '<div class="metar-switch"><input id="metar-power" type="checkbox"><span></span></div></div>' +
       '<p class="metar-help">Manual on/off lasts until the next scheduled transition.</p>' +
       "</div>" +
       '<div class="metar-card">' +
       "<h2>Schedule</h2>" +
       '<div class="metar-row"><label for="metar-schedule">Auto on/off</label>' +
-      '<div class="metar-switch"><input id="metar-schedule" type="checkbox"' +
-      (schedule.enabled ? " checked" : "") +
-      '><span></span></div></div>' +
+      '<div class="metar-switch"><input id="metar-schedule" type="checkbox"><span></span></div></div>' +
       '<div class="metar-times">' +
-      '<label>On <input id="metar-on" type="time" value="' +
-      escapeHtml((schedule.on || "10:00").slice(0, 5)) +
-      '"></label>' +
-      '<label>Off <input id="metar-off" type="time" value="' +
-      escapeHtml((schedule.off || "22:00").slice(0, 5)) +
-      '"></label>' +
+      '<label>On <input id="metar-on" type="time" value="10:00"></label>' +
+      '<label>Off <input id="metar-off" type="time" value="22:00"></label>' +
       "</div>" +
       '<p class="metar-help">Pacific Time (America/Los_Angeles). Overnight windows are fine. Turning the schedule off does not change the current power state.</p>' +
       "</div>" +
       '<div class="metar-card">' +
       "<h2>Brightness</h2>" +
-      '<input id="metar-brightness" type="range" min="0" max="255" step="1" value="' +
-      brightness +
-      '">' +
-      '<p class="metar-bright-readout" id="metar-bright-label">' +
-      brightness +
-      " / 255 · " +
-      percent +
-      "%</p>" +
+      '<input id="metar-brightness" type="range" min="0" max="255" step="1" value="20">' +
+      '<p class="metar-bright-readout" id="metar-bright-label">20 / 255 · 8%</p>' +
       "</div>" +
       '<div class="metar-card">' +
       "<h2>Weather refresh</h2>" +
       '<label class="metar-field-label" for="metar-interval">Interval (minutes)</label>' +
-      '<input id="metar-interval" type="number" min="0.25" step="0.25" value="' +
-      intervalMin +
-      '">' +
+      '<input id="metar-interval" type="number" min="0.25" step="0.25" value="15">' +
       '<p class="metar-help">Minimum 15 seconds (0.25 minutes). Default is 15 minutes.</p>' +
       '<div class="metar-actions"><button type="button" class="metar-btn primary" id="metar-refresh-now">Refresh now</button></div>' +
       "</div>" +
       '<div class="metar-card">' +
       "<h2>Last update</h2>" +
       '<dl class="metar-dl">' +
-      "<dt>METARs</dt><dd>" +
-      escapeHtml(humanizeMs(status.lastRefreshAgoMs)) +
-      "</dd>" +
-      "<dt>Status</dt><dd>" +
-      escapeHtml(phaseLabel(status)) +
-      "</dd>" +
-      "<dt>Last error</dt><dd>" +
-      escapeHtml(errorLabel(status.lastError)) +
-      "</dd>" +
-      (status.time ? "<dt>Map clock</dt><dd>" + escapeHtml(status.time) + " PT</dd>" : "") +
+      "<dt>METARs</dt><dd id=\"metar-last-metar\">never</dd>" +
+      "<dt>Status</dt><dd id=\"metar-last-phase\">Idle</dd>" +
+      "<dt>Last error</dt><dd id=\"metar-last-error\">None</dd>" +
+      '<dt id="metar-clock-dt" hidden>Map clock</dt><dd id="metar-clock-dd" hidden></dd>' +
       "</dl>" +
       "</div></div>";
 
-    document.getElementById("metar-logout").addEventListener("click", logout);
-    document.getElementById("metar-power").addEventListener("change", async (event) => {
+    $("metar-logout").addEventListener("click", logout);
+    $("metar-power").addEventListener("change", async (event) => {
       await mutate("/api/metar-map/power", "PUT", { on: event.target.checked });
     });
-    document.getElementById("metar-schedule").addEventListener("change", () => {
-      queueSchedule();
-    });
-    document.getElementById("metar-on").addEventListener("change", queueSchedule);
-    document.getElementById("metar-off").addEventListener("change", queueSchedule);
-    const slider = document.getElementById("metar-brightness");
+    $("metar-schedule").addEventListener("change", queueSchedule);
+    $("metar-on").addEventListener("change", queueSchedule);
+    $("metar-off").addEventListener("change", queueSchedule);
+    const slider = $("metar-brightness");
     slider.addEventListener("pointerdown", () => {
       dragging = true;
     });
     slider.addEventListener("input", () => {
       const value = Number(slider.value);
       const pct = Math.round((value * 100) / 255);
-      document.getElementById("metar-bright-label").textContent = value + " / 255 · " + pct + "%";
+      setText("metar-bright-label", value + " / 255 · " + pct + "%");
       clearTimeout(brightnessTimer);
       brightnessTimer = setTimeout(() => putBrightness(value), DEBOUNCE_MS);
     });
@@ -281,21 +293,51 @@
       clearTimeout(brightnessTimer);
       putBrightness(Number(slider.value));
     });
-    document.getElementById("metar-interval").addEventListener("change", queueInterval);
-    document.getElementById("metar-refresh-now").addEventListener("click", refreshNow);
+    $("metar-interval").addEventListener("change", queueInterval);
+    $("metar-refresh-now").addEventListener("click", refreshNow);
+    dashboardReady = true;
   }
 
-  function isInteracting() {
-    if (dragging) return true;
-    const el = document.activeElement;
-    return Boolean(el && root.contains(el) && (el.tagName === "INPUT" || el.tagName === "SELECT"));
+  function showDashboard(status) {
+    mountDashboard();
+    const vm = viewModel(status);
+    const conn = $("metar-pill-conn");
+    if (conn) {
+      conn.className = "metar-pill is-" + vm.kind + (vm.busy ? " is-busy" : "");
+      setText("metar-pill-conn", connectionText(status));
+    }
+    setHidden("metar-pill-busy", !vm.busy);
+    setHidden("metar-pill-send", !(vm.pending && !vm.busy));
+
+    const banner = $("metar-banner");
+    if (banner) {
+      banner.hidden = !vm.banner;
+      banner.className = "metar-banner" + (vm.bannerInfo ? " is-info" : "");
+      if (vm.banner && banner.textContent !== vm.banner) banner.textContent = vm.banner;
+    }
+
+    setChecked("metar-power", Boolean(vm.displayOn));
+    setChecked("metar-schedule", Boolean(vm.schedule.enabled));
+    setValue("metar-on", (vm.schedule.on || "10:00").slice(0, 5));
+    setValue("metar-off", (vm.schedule.off || "22:00").slice(0, 5));
+    setValue("metar-brightness", vm.brightness);
+    if (!dragging) setText("metar-bright-label", vm.brightness + " / 255 · " + vm.percent + "%");
+    setValue("metar-interval", vm.intervalMin);
+
+    setText("metar-last-metar", humanizeMs(status.lastRefreshAgoMs));
+    setText("metar-last-phase", phaseLabel(status));
+    setText("metar-last-error", errorLabel(status.lastError));
+    const hasClock = Boolean(status.time);
+    setHidden("metar-clock-dt", !hasClock);
+    setHidden("metar-clock-dd", !hasClock);
+    if (hasClock) setText("metar-clock-dd", status.time + " PT");
   }
 
   function scheduleBody() {
     return {
-      enabled: document.getElementById("metar-schedule").checked,
-      on: document.getElementById("metar-on").value,
-      off: document.getElementById("metar-off").value,
+      enabled: $("metar-schedule").checked,
+      on: $("metar-on").value,
+      off: $("metar-off").value,
     };
   }
 
@@ -310,7 +352,7 @@
   }
 
   async function putInterval() {
-    const minutes = Number(document.getElementById("metar-interval").value);
+    const minutes = Number($("metar-interval").value);
     if (!Number.isFinite(minutes)) return;
     await mutate("/api/metar-map/refresh", "PUT", { intervalMinutes: minutes });
   }
@@ -323,7 +365,7 @@
 
   async function refreshNow() {
     optimisticLoading = true;
-    if (lastStatus) renderDashboard(lastStatus);
+    if (lastStatus) showDashboard(lastStatus);
     await mutate("/api/metar-map/refresh", "POST");
   }
 
@@ -336,16 +378,13 @@
         renderLogin("Session expired.");
         return;
       }
-      if (!res.ok) {
-        if (lastStatus) renderDashboard(lastStatus);
-        return;
-      }
+      if (!res.ok) return;
       lastStatus = data;
       if (data && (data.loading || data.phase === "fetching")) optimisticLoading = false;
-      if (!isInteracting()) renderDashboard(data);
+      showDashboard(data);
       schedulePoll(data);
     } catch {
-      if (lastStatus) renderDashboard(lastStatus);
+      /* keep the current screen */
     }
   }
 
@@ -390,10 +429,10 @@
       lastStatus = data;
       if (data.loading || data.phase === "fetching") optimisticLoading = false;
       else if (data.pendingCommandId <= data.appliedCommandId) optimisticLoading = false;
-      if (!isInteracting()) renderDashboard(data);
+      showDashboard(data);
       schedulePoll(data);
     } catch {
-      renderLogin("Can't reach the map service.");
+      if (!dashboardReady) renderLogin("Can't reach the map service.");
     }
   }
 
